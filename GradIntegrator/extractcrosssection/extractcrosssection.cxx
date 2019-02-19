@@ -950,7 +950,7 @@ int main(int argc, char** argv) {
   vtkImageData* vtkSlice = vtkImageData::New();
   
   int line_it = 0;
-  for(auto& line: lines_test){ //lines
+  for(auto& line: lines){
     line_it += 1;
     
     cout << "-----New Lig, ID: " << line.first << endl ;
