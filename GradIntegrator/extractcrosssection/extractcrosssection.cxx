@@ -967,7 +967,7 @@ int main(int argc, char** argv) {
     
     std::cout << "Lig Size: " << l.size() << std::endl;
     /*
-     Iterate over points in middle of ligament. Currently 20 points
+     Iterate over points in middle of ligament. Currently 4 points
      centered at middle of ligament.
      *///-10 ; +10
     for(int p = l.size()/2 - 2 ; p < l.size()/2 + 2; p = p+2){ //plus two because two points needed for normal vec
