@@ -1,4 +1,4 @@
-#include <stdio.h>
+
 #include <vector>
 #include <map>
 #include <string>
@@ -90,7 +90,7 @@
  * to sum interior points for area.
  * Boundary cases pose issue if marked points not found. results in large
  * incorrect area calculation.
-*/
+ */
 typedef GInt::RegularGrid3D GridType;
 
 using namespace GInt;
@@ -110,8 +110,8 @@ vtkSmartPointer<vtkDoubleArray> cs_perimeter_values = vtkSmartPointer<vtkDoubleA
 vtkSmartPointer<vtkDoubleArray> lig_curvature_values = vtkSmartPointer<vtkDoubleArray>::New();
 
 struct xyzi {
-    double v[3];
-    int i;
+  double v[3];
+  int i;
 };
 
 std::map<int, vtkIdType> pointid_map;
@@ -317,14 +317,14 @@ xyzi ArbitraryRotate2(xyzi p,double theta,xyzi p1,xyzi p2)
 /*
  *
  *
-|---------------- Begin Slice / Ligament Attribute Computation ----------------|
+ |---------------- Begin Slice / Ligament Attribute Computation ----------------|
  *
  *
  */
 
 
 
- 
+
 //Group points in slice of volume orthogonally intersecting ligament
 //by connected components based on gradient(iso) values. Sum points in connected
 // component previously marked with largest gradient value in the interior.
@@ -368,10 +368,10 @@ crosssection ConnectedComponentsAttr(vtkImageData* cross_section_slice, xyzi p, 
   // new connected components given unique IDs
   cc.mIDVol->ReMapIds(output);
   
-//  ofstream outFile;
-//  outFile.open("maskvol.raw", ios::out|ios::binary|ios::ate);
-//  outFile.write((char*)output, underlying_grid->NumElements()*sizeof(int));
-//  outFile.close();
+  //  ofstream outFile;
+  //  outFile.open("maskvol.raw", ios::out|ios::binary|ios::ate);
+  //  outFile.write((char*)output, underlying_grid->NumElements()*sizeof(int));
+  //  outFile.close();
   
   int perim = 0;
   int area = 0;
@@ -437,7 +437,7 @@ void SetMinMax(std::vector<xyzi>& pointset, double* minv, double* maxv) {
 // The relationship between these coordinates is as follows:  x = T*M*x' where
 // "T" is ResliceTransform and "M" is ResliceMatrix
 double* Transform(vtkMatrix4x4 *vmatrix, vtkAbstractTransform* vtktransform, double p[3]){
-
+  
   vtkSmartPointer<vtkTransform> vtkTranslation = vtkSmartPointer<vtkTransform>::New();
   
   vtkTranslation->SetMatrix(vmatrix);
@@ -446,7 +446,7 @@ double* Transform(vtkMatrix4x4 *vmatrix, vtkAbstractTransform* vtktransform, dou
   
   vtkTranslation->Update();
   
-
+  
   double* tp = vtkTranslation->TransformPoint(p[0], p[1], p[2]);
   return p;
 }
@@ -455,7 +455,7 @@ double* Transform(vtkMatrix4x4 *vmatrix, vtkAbstractTransform* vtktransform, dou
 // Project point onto orthonormal basis defining slice plane perpendicular to
 // point on line at ligament center
 void Proj(double* p, std::vector<double> x, std::vector<double> y , std::vector<double> z ){
-
+  
   double dot_x = 0.0;
   double dot_y = 0.0;
   double dot_z = 0.0;
@@ -476,7 +476,7 @@ void Proj(double* p, std::vector<double> x, std::vector<double> y , std::vector<
     p[i] = (dot_x/sqrt(norm_x))*x[i] + (dot_y/sqrt(norm_y))*y[i] + (dot_z/sqrt(norm_z))*z[i];
     //std::cout << " p.v: " << p[i] << std::endl;
   }
-
+  
 }
 
 //inner product.
@@ -566,14 +566,14 @@ ligradius WalkDownToZero(xyzi p, xyzi p_theta, float g, float step){
   ligradius r;
   //currently just stops once first negative value is reached, i.e. once outside ligament
   /*
-  while( gradient  < 0.0){
-    
-    p_theta = Scale( p_theta, step);
-    p = p + p_theta;
-    r.r = p_theta;
-    r.s = p;
-    gradient = Gradient(p);
-  } */
+   while( gradient  < 0.0){
+   
+   p_theta = Scale( p_theta, step);
+   p = p + p_theta;
+   r.r = p_theta;
+   r.s = p;
+   gradient = Gradient(p);
+   } */
   return r;
 }
 
@@ -594,12 +594,12 @@ ligradius WalkItOut(xyzi p, xyzi p_theta, float step){
   }
   if(gradient < 0.0){
     /*
-    p = WalkDownToZero(p, p_theta,gradient, step);
-    gradient = Gradient(p);
-    if(gradient != 0.0){
-      p = WalkItOut(p, p_theta, step/2.0);
-    }
-  }*/
+     p = WalkDownToZero(p, p_theta,gradient, step);
+     gradient = Gradient(p);
+     if(gradient != 0.0){
+     p = WalkItOut(p, p_theta, step/2.0);
+     }
+     }*/
     surface_radius.r = p_theta;
     surface_radius.s = p;
     return surface_radius; //returns on negative grad
@@ -644,7 +644,7 @@ crosssection PerimeterSearch(xyzi p, xyzi nz, xyzi nx, double theta_step){
       previous_surface_p = surface_point;
     }
   }
-
+  
   // can compute cross section attributes and return crosssection type with
   // details on crosssection
   cs.area = area;
@@ -656,7 +656,7 @@ crosssection PerimeterSearch(xyzi p, xyzi nz, xyzi nx, double theta_step){
   //cout << "CURVATURE__" << curvature << endl;
   
   return cs; //surface_point;
-
+  
 }
 
 /*
@@ -667,33 +667,33 @@ crosssection PerimeterSearch(xyzi p, xyzi nz, xyzi nx, double theta_step){
  marked connected component to obtain area.
  */
 crosssection cross_section( vtkImageData* imageData, xyzi p, int lig_id, std::vector<double> bbox, bool save_img){
- 
+  
   // Create an image data
-
+  
   // Specify the size of the image data
-  #if VTK_MAJOR_VERSION <= 5
+#if VTK_MAJOR_VERSION <= 5
   imageData->SetNumberOfScalarComponents(1);
   imageData->SetScalarTypeToDouble();
-  #else
+#else
   imageData->AllocateScalars(VTK_DOUBLE,1);
-  #endif
+#endif
   
   int* dims = imageData->GetDimensions();
   
   //std::cout << "Dims: " << " x: " << dims[0] << " y: " << dims[1] << " z: " << dims[2] << std::endl;
   //std::cout << "Number of points: " << imageData->GetNumberOfPoints() << std::endl;
   //std::cout << "Number of cells: " << imageData->GetNumberOfCells() << std::endl;
-
- 
+  
+  
   dist_field_slice = new float[dims[0]*dims[1]*dims[2]];
   
   for (int x = 0; x < dims[0]; x++){
-      for (int y = 0; y < dims[1]; y++){
-          for (int z = 0; z < dims[2] ; z++){
-            double* pixel = static_cast<double*>(imageData->GetScalarPointer(x,y,z));
-            dist_field_slice[LinearIndexFromCoordinate(x, y, z, dims[0], dims[1]) ] = pixel[0];
-          }
+    for (int y = 0; y < dims[1]; y++){
+      for (int z = 0; z < dims[2] ; z++){
+        double* pixel = static_cast<double*>(imageData->GetScalarPointer(x,y,z));
+        dist_field_slice[LinearIndexFromCoordinate(x, y, z, dims[0], dims[1]) ] = pixel[0];
       }
+    }
   }
   
   //compute connected components of slice. Identify connected component with
@@ -703,10 +703,10 @@ crosssection cross_section( vtkImageData* imageData, xyzi p, int lig_id, std::ve
   cout << "Observed Perim: " << cs.perimeter <<endl;
   cs_area_values -> InsertComponent(p.i, 0, cs.area);
   //add found area of crosssectional slice at point p to cs_area_values vtksmartpointer
- 
+  
   if(save_img){
     vtkSmartPointer<vtkXMLImageDataWriter> writer = vtkSmartPointer<vtkXMLImageDataWriter>::New();
-  
+    
     std::string f_name = "cross_section_LIGG"+std::to_string(lig_id)+".vti";
     printf("saving %s\n",f_name.c_str());
     writer->SetFileName(f_name.c_str());
@@ -720,85 +720,85 @@ crosssection cross_section( vtkImageData* imageData, xyzi p, int lig_id, std::ve
 #ifdef VTK_ENABLED
 
 vtkSmartPointer<vtkPolyData> ReadVTKLigaments(char* filename, std::vector<xyzi>& pointset,
-                     std::map<int,std::vector<xyzi> >& lines, std::map<int,int>* point_to_line_map=NULL) {
+                                              std::map<int,std::vector<xyzi> >& lines, std::map<int,int>* point_to_line_map=NULL) {
   
   vtkSmartPointer<vtkXMLPolyDataReader> reader = vtkSmartPointer<vtkXMLPolyDataReader>::New();
   reader->SetFileName(filename);
   reader->Update();
-
+  
   vtkSmartPointer<vtkPolyData> polyData = reader->GetOutput();
-
+  
   //polyData->Print(std::cout);
-
+  
   vtkSmartPointer<vtkPoints> points = polyData->GetPoints();
-
+  
   // Create a cell array to store the lines in and add the lines to it
   vtkSmartPointer<vtkCellArray> cells = polyData->GetLines();
-
+  
   vtkSmartPointer<vtkPointData> pointdata = polyData->GetPointData();
   vtkSmartPointer<vtkIntArray> ids = vtkIntArray::SafeDownCast(pointdata->GetArray("Id"));
-
+  
   //printf("%s has:\t%d points and %d ids\n", filename, points->GetNumberOfPoints(), ids->GetNumberOfValues());
-   //std::cout << "There are " << polyData->GetNumberOfLines() << " lines." << std::endl;
-
+  //std::cout << "There are " << polyData->GetNumberOfLines() << " lines." << std::endl;
+  
   unsigned long point_id=0;
   
   polyData->GetLines()->InitTraversal();
   vtkSmartPointer<vtkIdList> idList = vtkSmartPointer<vtkIdList>::New();
   while(polyData->GetLines()->GetNextCell(idList)){
-   int npoints = idList->GetNumberOfIds();
-   //std::cout << "Line has " << npoints << " points." << std::endl;
-  
-   if(npoints==0)
-    continue;
-
-   int id = ids->GetValue(idList->GetId(0)); //line id
+    int npoints = idList->GetNumberOfIds();
+    //std::cout << "Line has " << npoints << " points." << std::endl;
     
-   if(lines.count(id) > 0)
-     continue;
-
-   std::vector<xyzi>& l = lines[id];
+    if(npoints==0)
+      continue;
     
-   for(vtkIdType pointId = 0; pointId < npoints; pointId++){
-     //std::cout << idList->GetId(pointId) << " ";
-     vtkIdType pid = idList->GetId(pointId);
-     double *p = points->GetPoint(pid);
-     
-     int lid = ids->GetValue(pid);
-     xyzi t;
-     for (int j = 0; j < 3; j++) t.v[j] = p[j];
-     t.i = lid;
-
-     pointid_map[lid]=pid;
-
-     pointset.push_back(t);
-     l.push_back(t);
+    int id = ids->GetValue(idList->GetId(0)); //line id
     
-     point_id++;
-     
-     if(point_to_line_map!=NULL)
-       (*point_to_line_map)[idList->GetId(pointId)] = id;
+    if(lines.count(id) > 0)
+      continue;
     
-   }
+    std::vector<xyzi>& l = lines[id];
+    
+    for(vtkIdType pointId = 0; pointId < npoints; pointId++){
+      //std::cout << idList->GetId(pointId) << " ";
+      vtkIdType pid = idList->GetId(pointId);
+      double *p = points->GetPoint(pid);
+      
+      int lid = ids->GetValue(pid);
+      xyzi t;
+      for (int j = 0; j < 3; j++) t.v[j] = p[j];
+      t.i = lid;
+      
+      pointid_map[lid]=pid;
+      
+      pointset.push_back(t);
+      l.push_back(t);
+      
+      point_id++;
+      
+      if(point_to_line_map!=NULL)
+        (*point_to_line_map)[idList->GetId(pointId)] = id;
+      
+    }
     
     if(l.size()!=npoints){
       printf("error lines size %d vtk %d\n", l.size(), npoints);
       assert(false);
     }
-   //std::cout << std::endl;
- }
+    //std::cout << std::endl;
+  }
   
   printf("Read complete correctly\n");
-
+  
   return polyData;
 }
 
 
 void updateVTKLigaments(vtkSmartPointer<vtkPolyData> polyData, std::string filename_out){
- 
+  
   vtkSmartPointer<vtkPolyData> polyData_out = vtkSmartPointer<vtkPolyData>::New();
   polyData_out->DeepCopy(polyData);
-    
+  
   // Remove exisisting arrays for the features we are computing here
   polyData_out->GetPointData()->RemoveArray("CrossArea");
   polyData_out->GetPointData()->RemoveArray("CrossPerimeter");
@@ -813,7 +813,7 @@ void updateVTKLigaments(vtkSmartPointer<vtkPolyData> polyData, std::string filen
   writer->SetInputData(polyData_out);
   writer->SetFileName(filename_out.c_str());
   writer->Write();
-
+  
   printf("Ligaments updated\n");
 };
 
@@ -821,36 +821,36 @@ void updateVTKLigaments(vtkSmartPointer<vtkPolyData> polyData, std::string filen
 #endif
 
 /*
-  create vtkImageData cube filled with gradient values in gradient_field.
-  mark points around p with fabricated max gradient value to later identify connected
-  component of interest in crosssectional slice.
+ create vtkImageData cube filled with gradient values in gradient_field.
+ mark points around p with fabricated max gradient value to later identify connected
+ component of interest in crosssectional slice.
  */
 vtkImageData* create_vtkFunction(xyzi p, xyzi p_og, vtkImageData* cube, std::vector<double> bbox) {
-
+  
   
   printf(" --- creating a vtk function...");
   fflush(stdout);
   
   cube->SetOrigin(0.0, 0.0, 0.0);
   cube->SetSpacing(1.0,1.0,1.0);
-
+  
   cube->SetDimensions((int)bbox[1]-(int)bbox[0]+1, (int)bbox[3]-(int)bbox[2]+1, (int)bbox[5]-(int)bbox[4]+1); //set dim to max-min of bbox
   
   cube->AllocateScalars(VTK_DOUBLE, 1);
   cube->GetPointData()->GetScalars()->SetName("function");
   
   float max_field_val = max_element(dist_field);
-
+  
   for (int x = bbox[0]; x < bbox[1]; x++) { //iterate of min to max all axes of bbox(within original vol)
-      for (int y = bbox[2]; y < bbox[3]; y++) {
-          for (int z = bbox[4]; z < bbox[5]; z++) {
-
+    for (int y = bbox[2]; y < bbox[3]; y++) {
+      for (int z = bbox[4]; z < bbox[5]; z++) {
+        
         double* pixel = static_cast<double*>(cube->GetScalarPointer(x-(int)bbox[0],y -(int)bbox[2],z - (int)bbox[4]));
         
         // fill vtkimage with marker around p
         float field_val = marked_dist_field[LinearIndexFromCoordinate(x,y ,z,X,Y)];
         pixel[0]= field_val;
-            
+        
         // mark cube around point p original to identify ligament in connected component computation
         // if cube is < 5 the second ligament can be missed. I'm not sure what size value
         // to use to be able to mark all ligaments including boundary cases while not
@@ -861,16 +861,16 @@ vtkImageData* create_vtkFunction(xyzi p, xyzi p_og, vtkImageData* cube, std::vec
     }
   }
   /*
-  vtkSmartPointer<vtkXMLImageDataWriter> writer = vtkSmartPointer<vtkXMLImageDataWriter>::New();
-  writer->SetFileName("cube_window.vti");
-  writer->SetInputData(cube);
-  writer->Write();
+   vtkSmartPointer<vtkXMLImageDataWriter> writer = vtkSmartPointer<vtkXMLImageDataWriter>::New();
+   writer->SetFileName("cube_window.vti");
+   writer->SetInputData(cube);
+   writer->Write();
    */
   printf(" vtk function done.\n");
-   
-
+  
+  
   return cube;
- 
+  
 }
 
 // Using transormation matrix vmatrix compute slice vtkSlice of volume vtkdata
@@ -899,7 +899,7 @@ vtkImageData* compute_slice(vtkImageData *vtkdata, vtkMatrix4x4 *vmatrix, vtkAbs
   vtktransform = vtkSlicer -> GetResliceTransform();
   //vtkTransform = vtkSlicer -> ResliceTransform();
   return vtkSlice;
-
+  
 }
 
 std::vector<double> bounding_box(xyzi p, int bounds){
@@ -971,11 +971,11 @@ std::vector<double> Normal(xyzi p1, xyzi p2){
 // return u X v
 std::vector<double> Cross(std::vector<double> u, std::vector<double> v){
   std::vector<double> cp(3);
-
+  
   cp[0] = u[1]*v[2] - u[2]*v[1];
   cp[1] = u[2]*v[0] - u[0]*v[2];
   cp[2] = u[0]*v[1] - u[1]*v[0];
-
+  
   return cp;
 }
 
@@ -991,9 +991,9 @@ std::vector<double> Scale(std::vector<double> v, float scale){
 
 // filename, x,y,z , sx, sy, sz, ex, ey, ez, sx, sy, sz
 int main(int argc, char** argv) {
-
-  if(argc < 5){
-    printf("usage: extractcrosssection <X> <Y> <Z> <lines.vtp> <dist_field.raw>\n");
+  
+  if(argc < 7){
+    printf("usage: extractcrosssection <X> <Y> <Z> <run entire ligament> <save results> <lines.vtp> <dist_field.raw>\n");
     return 1;
   }
   
@@ -1001,12 +1001,18 @@ int main(int argc, char** argv) {
   sscanf(argv[2], "%d", &Y);
   sscanf(argv[3], "%d", &Z);
   
+  int compute_full_lig;
+  int save_results;
+  sscanf(argv[4], "%d", &compute_full_lig);
+  sscanf(argv[5], "%d", &save_results);
+
+  
   dist_field = new float[X*Y*Z];
   marked_dist_field = new float[X*Y*Z];
   
   int num_elems=X*Y*Z;
   
-  FILE* fin = fopen(argv[5], "rb");
+  FILE* fin = fopen(argv[7], "rb");
   fread(dist_field, sizeof(int), num_elems, fin);
   fclose(fin);
   
@@ -1016,15 +1022,15 @@ int main(int argc, char** argv) {
   std::vector<xyzi> line_pointset;
   std::map<int,std::vector<xyzi> > lines;
   std::map<int,std::vector<xyzi> > lines_test;
-
-  char* lines_filename = argv[4];
-
+  
+  char* lines_filename = argv[6];
+  
   // read input into pointsets and lines
   vtkSmartPointer<vtkPolyData> polyData = ReadVTKLigaments(lines_filename, line_pointset, lines);
-    
+  
   vtkSmartPointer<vtkPointData> pointdata = polyData->GetPointData();
   vtkSmartPointer<vtkIntArray> ids = vtkIntArray::SafeDownCast(pointdata->GetArray("Id"));
-
+  
   // hack for testing specific ligament
   int check = 0;
   int lig_id = 23;
@@ -1040,28 +1046,28 @@ int main(int argc, char** argv) {
   
   cs_area_values->SetNumberOfComponents(1);
   cs_area_values->SetName("CrossArea");
-
+  
   cs_perimeter_values->SetNumberOfComponents(1);
   cs_perimeter_values->SetName("CrossPerimeter");
-
+  
   lig_curvature_values->SetNumberOfComponents(1);
   lig_curvature_values->SetName("Curvature");
-
+  
   // Iterate over ligaments filling cube with gradient values and taking slice vtkSlice
   // orthogonal to ligament l.
   vtkImageData* cube = vtkImageData::New();
   vtkImageData* vtkSlice = vtkImageData::New();
   
   int line_it = 0;
-
+  
   unsigned long line_point_id=0;
-
+  
   //#pragma omp parallel {
   for(auto& line: lines){
     line_it += 1;
- 
+    
     cout << "-----New Lig, ID: " << line.first << endl ;
-
+    
     std::vector<xyzi> l = line.second;
     
     //used to mark points on ligament of interest and around point p
@@ -1078,7 +1084,16 @@ int main(int argc, char** argv) {
      centered at middle of ligament.
      *///-10 ; +10
     //for(int p = l.size()/2 - 2 ; p < l.size()/2 + 2; p = p+2){ //plus two because two points needed for normal vec
-    for(int p = l.size()/2; p < l.size()/2 + 1; p = p+2){ //plus two because two points needed for normal vec
+    int p_;
+    int stop;
+    if(compute_full_lig){
+      p_ = 1;
+      stop = l.size()-1;
+    }else{
+      p_ = l.size()/2 - 2;
+      stop = l.size()/2 + 2;
+    }
+    for(int p = p_; p < stop; p = p+2){ //plus two because two points needed for normal vec
       
       //Mark all points in line with fabricated highest gradient value to be identified
       //later through connected components.
@@ -1091,141 +1106,141 @@ int main(int argc, char** argv) {
         }
       }
       
-    // Ensure not stepping out of ligament for small ligaments
-    if(p<l.size() && p+2<l.size()){
-      // two points some distance along msc away from one another
-      xyzi p1 = l[p];
-      xyzi p2 = l[p+2];
-    
-    
-      // normal to two points on skeleton
-      std::vector<double> nz = Normal(p1,p2);
-      
-      // Ensure cosine similarity between normal vectors isn't large, i.e. semi-aligned
-      // unsure what angle value to use.
-      int step = 2;
-      xyzi p_new = l[p+step];
-      std::vector<double> norm_check = Normal(p1,p_new);
-      // record curve of ligament
-      double curve = cosSim(nz, norm_check);
-      //if(isnan(curve) == false)
+      // Ensure not stepping out of ligament for small ligaments
+      if(p<l.size() && p+2<l.size()){
+        // two points some distance along msc away from one another
+        xyzi p1 = l[p];
+        xyzi p2 = l[p+2];
+        
+        
+        // normal to two points on skeleton
+        std::vector<double> nz = Normal(p1,p2);
+        
+        // Ensure cosine similarity between normal vectors isn't large, i.e. semi-aligned
+        // unsure what angle value to use.
+        int step = 2;
+        xyzi p_new = l[p+step];
+        std::vector<double> norm_check = Normal(p1,p_new);
+        // record curve of ligament
+        double curve = cosSim(nz, norm_check);
+        //if(isnan(curve) == false)
         //curvature += curve;
-      //cout << "cosSim: " << curve << endl;
-      // choose normal more aligned
-      if( cosSim(nz, norm_check) > 45.0){
-        while( cosSim(nz, norm_check) > 45.0 ){
-          step = step + 2;
-          p_new = l[p+step];
-          norm_check = Normal(p1, p_new);
+        //cout << "cosSim: " << curve << endl;
+        // choose normal more aligned
+        if( cosSim(nz, norm_check) > 45.0){
+          while( cosSim(nz, norm_check) > 45.0 ){
+            step = step + 2;
+            p_new = l[p+step];
+            norm_check = Normal(p1, p_new);
+          }
+          nz = norm_check;
         }
-        nz = norm_check;
-      }
-
-      // compute cotangent and tangent of normal
-      uint8_t m = fabs(nz[0]) < fabs(nz[1]) ? 0 : 1;
-              m = fabs(nz[m]) < fabs(nz[2]) ? m : 2;
-    
-      std::vector<double> w = {0,0,0};
-      w[m] = 1;
-    
-      //tan vector to normal
-      std::vector<double> vx = Cross(w, nz);
-
-      vx = Unit(vx);
-
-      //cotan vector to normal
-      std::vector<double> vy = Cross(nz, vx);
-
-      vy = Unit(vy);
-    
-      vtkMatrix4x4* SliceMatrix;
-      //#Set inital state of matrix to identity
-      SliceMatrix = vtkMatrix4x4::New();
-
-      SliceMatrix->Identity();
-    
-      //#x axis column
-      SliceMatrix->SetElement(0, 0, vx[0]);
-      SliceMatrix->SetElement(1, 0, vx[1]);
-      SliceMatrix->SetElement(2, 0, vx[2]);
-      SliceMatrix->SetElement(3, 0, 0.0);
-    
-      //#y axis column
-      SliceMatrix->SetElement(0, 1, vy[0]);
-      SliceMatrix->SetElement(1, 1, vy[1]);
-      SliceMatrix->SetElement(2, 1, vy[2]);
-      SliceMatrix->SetElement(3, 1, 0.0);
-    
-      //#z axis column
-      SliceMatrix->SetElement(0, 2, nz[0]);
-      SliceMatrix->SetElement(1, 2, nz[1]);
-      SliceMatrix->SetElement(2, 2, nz[2]);
-      SliceMatrix->SetElement(3, 2, 0.0);
-    
-      xyzi unit_p = Unit(p1);
-      int bounds = 50;
-      std::vector<double> bbox = bounding_box(p1, bounds);
-      xyzi scaled_p = unit_p;
-      scaled_p.v[0] = (p1.v[0] - bbox[0]); //min of bounding box around vector p
-      scaled_p.v[1] = (p1.v[1] - bbox[2]); // multiplied by unit of p to give box of size 'bounds'
-      scaled_p.v[2] = (p1.v[2] - bbox[4]); // around p
-      
-      //#origin column // is this the correct one?
-      SliceMatrix->SetElement(0, 3, scaled_p.v[0]);
-      SliceMatrix->SetElement(1, 3, scaled_p.v[1]);
-      SliceMatrix->SetElement(2, 3, scaled_p.v[2]);
-      SliceMatrix->SetElement(3, 3, 1.0);
-    
-      //std::vector<double> rotate_p = RotateX({p1.v[0], p1.v[1], p1.v[2]});
-      //double max_radius = PerimeterSearch(p1, toXYZI(nz,97), toXYZI(vx, 97), 1.0);
-      //std::cout << "og_p: "<< p1.v[0] <<" "<<p1.v[1]<< " "<<p1.v[1]<<std::endl;
-      //std::cout << "scaled+p: "<< scaled_p.v[0] <<" "<<scaled_p.v[1]<< " "<<scaled_p.v[1]<<std::endl;
-      //std::cout << "bbox: " << bbox[0] <<" "<<bbox[1] <<" "<<bbox[2] <<" "<<bbox[3] <<" "<<bbox[4] <<" "<<bbox[5] <<std::endl;
-     
-      crosssection cs;
-
- //  if(line_it < 20) {
- 
-      create_vtkFunction(scaled_p, p1, cube, bbox);
-
-      // Compute slice of cube given coordinated defining perpendicularly intersecting
-      // plane to interior line
-      vtkAbstractTransform *vtkTransform;
-      compute_slice(cube, SliceMatrix, vtkTransform, vtkSlice);
-      
-      bool save_slice_before_cc = true;
-      if(save_slice_before_cc){
-        vtkSmartPointer<vtkXMLImageDataWriter> writer = vtkSmartPointer<vtkXMLImageDataWriter>::New();
-        std::string f_name = "Slice_LIGG"+std::to_string(lig_id)+".vti";
-        writer->SetFileName(f_name.c_str());
-        writer->SetInputData(vtkSlice);
-        writer->Write();
-      }
-      //vtkSmartPointer<vtkXMLImageDataWriter> writer = vtkSmartPointer<vtkXMLImageDataWriter>::New();
-      //writer->SetFileName("slice.vti");
-      //writer->SetInputData(vtkSlice);
-      //writer->Write();
-      
-      bool save_img_cross_section = false;
-      cs = cross_section(vtkSlice, scaled_p, lig_id, bbox, save_img_cross_section);
-  // }  
-      for(int pid=0; pid<l.size();pid++){
-	//auto& pline = line[pid];
-        cs_area_values->InsertComponent(line_point_id+pid, 0, cs.area);
-        cs_perimeter_values->InsertComponent(line_point_id+pid, 0, cs.perimeter); 
-      }
-
-      line_point_id+=l.size();
-      
-      /*
-       vtkSmartPointer<vtkXMLImageDataWriter> writer2 = vtkSmartPointer<vtkXMLImageDataWriter>::New();
-       writer2->SetFileName("crop.vti");
-       writer2->SetInputData(rawImage);
-       writer2->Write();
-    
-       printf(" Done!!\n");
-       */
-      
+        
+        // compute cotangent and tangent of normal
+        uint8_t m = fabs(nz[0]) < fabs(nz[1]) ? 0 : 1;
+        m = fabs(nz[m]) < fabs(nz[2]) ? m : 2;
+        
+        std::vector<double> w = {0,0,0};
+        w[m] = 1;
+        
+        //tan vector to normal
+        std::vector<double> vx = Cross(w, nz);
+        
+        vx = Unit(vx);
+        
+        //cotan vector to normal
+        std::vector<double> vy = Cross(nz, vx);
+        
+        vy = Unit(vy);
+        
+        vtkMatrix4x4* SliceMatrix;
+        //#Set inital state of matrix to identity
+        SliceMatrix = vtkMatrix4x4::New();
+        
+        SliceMatrix->Identity();
+        
+        //#x axis column
+        SliceMatrix->SetElement(0, 0, vx[0]);
+        SliceMatrix->SetElement(1, 0, vx[1]);
+        SliceMatrix->SetElement(2, 0, vx[2]);
+        SliceMatrix->SetElement(3, 0, 0.0);
+        
+        //#y axis column
+        SliceMatrix->SetElement(0, 1, vy[0]);
+        SliceMatrix->SetElement(1, 1, vy[1]);
+        SliceMatrix->SetElement(2, 1, vy[2]);
+        SliceMatrix->SetElement(3, 1, 0.0);
+        
+        //#z axis column
+        SliceMatrix->SetElement(0, 2, nz[0]);
+        SliceMatrix->SetElement(1, 2, nz[1]);
+        SliceMatrix->SetElement(2, 2, nz[2]);
+        SliceMatrix->SetElement(3, 2, 0.0);
+        
+        xyzi unit_p = Unit(p1);
+        int bounds = 50;
+        std::vector<double> bbox = bounding_box(p1, bounds);
+        xyzi scaled_p = unit_p;
+        scaled_p.v[0] = (p1.v[0] - bbox[0]); //min of bounding box around vector p
+        scaled_p.v[1] = (p1.v[1] - bbox[2]); // multiplied by unit of p to give box of size 'bounds'
+        scaled_p.v[2] = (p1.v[2] - bbox[4]); // around p
+        
+        //#origin column // is this the correct one?
+        SliceMatrix->SetElement(0, 3, scaled_p.v[0]);
+        SliceMatrix->SetElement(1, 3, scaled_p.v[1]);
+        SliceMatrix->SetElement(2, 3, scaled_p.v[2]);
+        SliceMatrix->SetElement(3, 3, 1.0);
+        
+        //std::vector<double> rotate_p = RotateX({p1.v[0], p1.v[1], p1.v[2]});
+        //double max_radius = PerimeterSearch(p1, toXYZI(nz,97), toXYZI(vx, 97), 1.0);
+        //std::cout << "og_p: "<< p1.v[0] <<" "<<p1.v[1]<< " "<<p1.v[1]<<std::endl;
+        //std::cout << "scaled+p: "<< scaled_p.v[0] <<" "<<scaled_p.v[1]<< " "<<scaled_p.v[1]<<std::endl;
+        //std::cout << "bbox: " << bbox[0] <<" "<<bbox[1] <<" "<<bbox[2] <<" "<<bbox[3] <<" "<<bbox[4] <<" "<<bbox[5] <<std::endl;
+        
+        crosssection cs;
+        
+        //  if(line_it < 20) {
+        
+        create_vtkFunction(scaled_p, p1, cube, bbox);
+        
+        // Compute slice of cube given coordinated defining perpendicularly intersecting
+        // plane to interior line
+        vtkAbstractTransform *vtkTransform;
+        compute_slice(cube, SliceMatrix, vtkTransform, vtkSlice);
+        
+        bool save_slice_before_cc = true;
+        if(save_slice_before_cc){
+          vtkSmartPointer<vtkXMLImageDataWriter> writer = vtkSmartPointer<vtkXMLImageDataWriter>::New();
+          std::string f_name = "Slice_LIGG"+std::to_string(lig_id)+".vti";
+          writer->SetFileName(f_name.c_str());
+          writer->SetInputData(vtkSlice);
+          writer->Write();
+        }
+        //vtkSmartPointer<vtkXMLImageDataWriter> writer = vtkSmartPointer<vtkXMLImageDataWriter>::New();
+        //writer->SetFileName("slice.vti");
+        //writer->SetInputData(vtkSlice);
+        //writer->Write();
+        
+        bool save_img_cross_section = false;
+        cs = cross_section(vtkSlice, scaled_p, lig_id, bbox, save_img_cross_section);
+        // }
+        for(int pid=0; pid<l.size();pid++){
+          //auto& pline = line[pid];
+          cs_area_values->InsertComponent(line_point_id+pid, 0, cs.area);
+          cs_perimeter_values->InsertComponent(line_point_id+pid, 0, cs.perimeter);
+        }
+        
+        line_point_id+=l.size();
+        
+        /*
+         vtkSmartPointer<vtkXMLImageDataWriter> writer2 = vtkSmartPointer<vtkXMLImageDataWriter>::New();
+         writer2->SetFileName("crop.vti");
+         writer2->SetInputData(rawImage);
+         writer2->Write();
+         
+         printf(" Done!!\n");
+         */
+        
       }//end line loop
     }
     
@@ -1233,13 +1248,13 @@ int main(int argc, char** argv) {
     // planes to ligament
 #if 0
     cout << "---- === Compute curvature === ----" << endl;
-
+    
     double curvature = 0;
     for(auto& line: lines){
       cout << "-----New Lig, ID: " << line.first << endl ;
       
       std::vector<xyzi> l = line.second;
-
+      
       int lig_id = line.first;
       
       for(int p = 40; p < l.size()-40; p = p+2){
@@ -1250,16 +1265,16 @@ int main(int argc, char** argv) {
           //int np= l.size()/2 +3;
           //xyzi p1 = l[np];
           //xyzi p2 = l[np+2];//np+10];
-        
+          
           // two points some distance along skeloton away from one another
           xyzi p1 = l[p];
           xyzi p2 = l[p+2];//np+10];
           //print(p1, "p1 ");
-        
-        
+          
+          
           // normal to two points on skeleton
           std::vector<double> nz = Normal(p1,p2);
-        
+          
           // Insure cosine similarity between normal vectors isn't large, i.e. semi-aligned
           int step = 3;
           if(p+step < l.size()){
@@ -1271,17 +1286,18 @@ int main(int argc, char** argv) {
               curvature += curve;
             //cout << "cosSim: " << curve << endl;
           }
-      
+          
           // DJ Trump: "WRONG!" the Id needed by insert component is not the ligament id (see other arrays)
           lig_curvature_values -> InsertComponent(lig_id, 0, curvature);
           cout << "Curvature: " << curvature << endl;
         }
       }
-    } 
+    }
 #endif
   }
-
+  
   updateVTKLigaments(polyData, string(lines_filename)+"_cross.vtp");
-    
+  
   return 1;
 }
+
