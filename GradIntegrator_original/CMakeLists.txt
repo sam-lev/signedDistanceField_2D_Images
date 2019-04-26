@@ -78,11 +78,6 @@ if(EXTRACT_CURVATURE_ENABLED)
   ADD_SUBDIRECTORY(extractcurvature)
 endif()
 
-option(EXTRACT_METRICS_ENABLED "Build extract graph metrics" FALSE)
-if(EXTRACT_METRICS_ENABLED)
-  ADD_SUBDIRECTORY(extractmetrics)
-endif()
-
 option(LABEL_CONN_COMP_ENABLED "Label connected components" FALSE)
 if(LABEL_CONN_COMP_ENABLED)
   ADD_SUBDIRECTORY(labelconnectedcomponents)
